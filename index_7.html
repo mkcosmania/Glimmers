@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink:#F4C0D1;--pink-dark:#99355E;--pink-mid:#D4537E;
+  --blue:#2856AE;--blue-dark:#0C447C;--blue-light:#D6E8FA;
+  --bg:#FAFAF9;--surface:#fff;--border:#E8E6E0;
+  --text:#1A1A1A;--text-muted:#888780;--text-light:#B4B2A9;
+  --p1-bg:#FDECEA;--p1-text:#C0392B;--p1-border:#F5C4B3;
+  --p2-bg:#FFF8DC;--p2-text:#C8A000;--p2-border:#FAC775;
+  --p3-bg:#EAF3DE;--p3-text:#3B6D11;--p3-border:#C0DD97;
+  --p4-bg:#D6E8FA;--p4-text:#0C447C;--p4-border:#85B7EB;
+  --done:#3B6D11;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
+
+/* SIDEBAR */
+.app{display:flex;min-height:100vh;}
+.sidebar{width:240px;flex-shrink:0;background:var(--blue-dark);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;transition:transform .25s;}
+.sidebar-logo{padding:18px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.sidebar-logo .brand{font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;color:white;letter-spacing:-0.3px;}
+.sidebar-logo .brand span{color:var(--pink);}
+.sidebar-logo .sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.sidebar-projects{flex:1;overflow-y:auto;padding:12px 8px;}
+.sidebar-section-title{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:4px 8px 8px;}
+.proj-btn{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:8px;border:none;background:none;color:rgba(255,255,255,0.7);font-family:'Sarabun',sans-serif;font-size:14px;cursor:pointer;text-align:left;transition:all .15s;position:relative;}
+.proj-btn:hover{background:rgba(255,255,255,0.08);color:white;}
+.proj-btn.active{background:rgba(255,255,255,0.15);color:white;font-weight:500;}
+.proj-btn .proj-icon{font-size:16px;flex-shrink:0;}
+.proj-btn .proj-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.proj-btn .proj-badge{font-size:10px;background:rgba(255,255,255,0.15);border-radius:10px;padding:1px 7px;flex-shrink:0;}
+.proj-btn.active .proj-badge{background:var(--pink);color:var(--blue-dark);font-weight:600;}
+.add-proj-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border-radius:8px;border:1px dashed rgba(255,255,255,0.2);background:none;color:rgba(255,255,255,0.4);font-family:'Sarabun',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;transition:all .15s;}
+.add-proj-btn:hover{border-color:rgba(255,255,255,0.5);color:white;}
+.sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.1);}
+.sidebar-footer-text{font-size:11px;color:rgba(255,255,255,0.3);}
+.io-btn{display:block;width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:none;color:rgba(255,255,255,0.75);font-family:'Sarabun',sans-serif;font-size:12px;cursor:pointer;margin-bottom:6px;transition:all .15s;text-align:left;}
+.io-btn:hover{background:rgba(255,255,255,0.1);color:white;border-color:rgba(255,255,255,0.4);}
+
+/* MAIN CONTENT */
+.content{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--blue);padding:0;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(0,0,0,0.15);}
+.topbar-inner{max-width:960px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.topbar-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;color:white;flex:1;}
+.launch-badge{background:var(--pink);color:var(--blue-dark);font-family:'Poppins',sans-serif;font-weight:600;font-size:12px;padding:4px 12px;border-radius:20px;cursor:pointer;}
+.launch-badge:hover{opacity:0.85;}
+.edit-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;font-family:'Sarabun',sans-serif;font-size:13px;padding:5px 14px;border-radius:20px;cursor:pointer;transition:all .15s;}
+.edit-btn:hover{background:rgba(255,255,255,0.25);}
+.edit-btn.active{background:var(--pink);color:var(--blue-dark);border-color:var(--pink);font-weight:600;}
+.menu-btn{display:none;background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:4px;}
+
+/* PROGRESS */
+.progress-panel{background:var(--surface);border-bottom:1px solid var(--border);padding:18px 24px;}
+.progress-inner{max-width:960px;margin:0 auto;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;}
+.stat-num{font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:var(--blue);line-height:1;}
+.stat-label{font-size:11px;color:var(--text-muted);margin-top:3px;}
+.bar-wrap{background:var(--bg);border-radius:20px;height:7px;overflow:hidden;margin-bottom:5px;border:1px solid var(--border);}
+.bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--blue),var(--pink-mid));transition:width .4s;}
+.bar-lbl{font-size:12px;color:var(--text-muted);}
+
+/* SETTINGS PANEL */
+.settings-panel{display:none;background:#f0f4ff;border-bottom:1px solid var(--border);padding:16px 24px;}
+body.edit-mode .settings-panel{display:block;}
+.settings-inner{max-width:960px;margin:0 auto;}
+.settings-title{font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;color:var(--blue-dark);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+@media(min-width:700px){.settings-grid{grid-template-columns:repeat(4,1fr);}}
+.phase-card{border-radius:10px;padding:10px 12px;border:1px solid var(--border);background:white;}
+.phase-card-head{font-size:10px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;}
+.phase-name-inp{font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;border:1px solid var(--border);border-radius:6px;padding:4px 8px;outline:none;width:100%;margin-bottom:6px;transition:border-color .15s;}
+.phase-name-inp:focus{border-color:var(--blue);}
+.phase-date-inp{font-family:'Sarabun',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:6px;padding:3px 8px;outline:none;width:100%;color:var(--text-muted);transition:border-color .15s;}
+.phase-date-inp:focus{border-color:var(--blue);}
+.phase-date-inp::placeholder{color:var(--text-light);}
+.launch-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.launch-row-label{font-size:12px;color:var(--text-muted);flex-shrink:0;}
+.launch-date-inp{font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;border:1px solid var(--border);border-radius:6px;padding:5px 10px;outline:none;color:var(--blue-dark);cursor:pointer;transition:border-color .15s;}
+.launch-date-inp:focus{border-color:var(--blue);}
+.launch-countdown{font-size:12px;color:var(--text-muted);}
+.del-proj-btn{margin-left:auto;background:none;border:1px solid #C0392B;color:#C0392B;font-family:'Sarabun',sans-serif;font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .15s;}
+.del-proj-btn:hover{background:#C0392B;color:white;}
+
+/* LEGEND + FILTERS */
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:12px 24px;max-width:960px;margin:0 auto;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-muted);}
+.legend-dot{width:8px;height:8px;border-radius:50%;}
+.filters-wrap{max-width:960px;margin:0 auto;padding:12px 24px 0;display:flex;gap:8px;flex-wrap:wrap;}
+.filter-btn{font-family:'Sarabun',sans-serif;font-size:13px;padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.filter-btn:hover{border-color:var(--blue);color:var(--blue);}
+.filter-btn.active{background:var(--blue);color:white;border-color:var(--blue);}
+
+/* MAIN — 2-column grid */
+.main{max-width:960px;margin:0 auto;padding:6px 24px 60px;}
+
+.sections-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start;}
+@media(max-width:700px){.sections-grid{grid-template-columns:1fr;}.main{padding:10px 14px 40px;}}
+
+/* SECTION */
+.section{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;}
+.sec-header{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;user-select:none;transition:background .1s;}
+.sec-header:hover{background:var(--bg);}
+.sec-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.sec-name{font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;flex:1;color:var(--text);}
+.sec-name-inp{font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;flex:1;border:1px solid var(--blue);border-radius:6px;padding:2px 8px;outline:none;display:none;}
+body.edit-mode .sec-name{display:none;}
+body.edit-mode .sec-name-inp{display:block;}
+.sec-count{font-size:12px;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2px 9px;}
+.sec-chevron{font-size:11px;color:var(--text-light);transition:transform .2s;}
+.section.open .sec-chevron{transform:rotate(180deg);}
+.del-sec-btn{display:none;background:none;border:none;cursor:pointer;color:#C0392B;font-size:15px;padding:0 3px;flex-shrink:0;opacity:0.5;transition:opacity .15s;}
+.del-sec-btn:hover{opacity:1;}
+body.edit-mode .del-sec-btn{display:flex;align-items:center;}
+.sec-body{border-top:1px solid var(--border);display:none;}
+.section.open .sec-body{display:block;}
+
+/* ITEM */
+.item{display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);transition:background .1s;}
+.item:last-child{border-bottom:none;}
+.item:hover{background:var(--bg);}
+.item.hidden{display:none;}
+.check-box{width:19px;height:19px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .15s;background:white;cursor:pointer;}
+.item.done .check-box{background:var(--done);border-color:var(--done);}
+.check-icon{display:none;color:white;font-size:11px;font-weight:700;}
+.item.done .check-icon{display:block;}
+.item-content{flex:1;min-width:0;}
+.item-text{font-size:14px;color:var(--text);}
+.item.done .item-text{text-decoration:line-through;color:var(--text-light);}
+.item-text-inp{font-family:'Sarabun',sans-serif;font-size:14px;border:1px solid var(--blue);border-radius:6px;padding:2px 8px;outline:none;width:100%;display:none;margin-bottom:3px;}
+body.edit-mode .item-text{display:none;}
+body.edit-mode .item-text-inp{display:block;}
+.item-note{font-size:12px;color:var(--text-muted);margin-top:1px;}
+.item.done .item-note{color:var(--text-light);}
+.item-note-inp{font-family:'Sarabun',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:6px;padding:2px 8px;outline:none;width:100%;display:none;color:var(--text-muted);}
+body.edit-mode .item-note{display:none;}
+body.edit-mode .item-note-inp{display:block;}
+
+.phase-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;flex-shrink:0;margin-top:2px;white-space:nowrap;}
+.p1-badge{background:var(--p1-bg);color:var(--p1-text);border:1px solid var(--p1-border);}
+.p2-badge{background:var(--p2-bg);color:var(--p2-text);border:1px solid var(--p2-border);}
+.p3-badge{background:var(--p3-bg);color:var(--p3-text);border:1px solid var(--p3-border);}
+.p4-badge{background:var(--p4-bg);color:var(--p4-text);border:1px solid var(--p4-border);}
+
+.phase-select{font-family:'Sarabun',sans-serif;font-size:11px;border:1px solid var(--border);border-radius:6px;padding:2px 5px;outline:none;display:none;cursor:pointer;flex-shrink:0;margin-top:2px;}
+body.edit-mode .phase-badge{display:none;}
+body.edit-mode .phase-select{display:block;}
+
+.memo-toggle{background:none;border:none;cursor:pointer;font-size:13px;color:var(--text-light);padding:0;margin-top:2px;flex-shrink:0;transition:color .15s;}
+.memo-toggle:hover{color:var(--blue);}
+.memo-toggle.has-memo{color:var(--blue);}
+body.edit-mode .memo-toggle{display:none;}
+.del-item-btn{display:none;background:none;border:none;cursor:pointer;color:#C0392B;font-size:13px;padding:0 2px;flex-shrink:0;margin-top:3px;opacity:0.45;transition:opacity .15s;}
+.del-item-btn:hover{opacity:1;}
+body.edit-mode .del-item-btn{display:flex;align-items:flex-start;}
+.memo-row{padding:0 16px 9px 45px;display:none;}
+.memo-row.visible{display:block;}
+.img-toggle{background:none;border:none;cursor:pointer;font-size:14px;padding:0 3px;flex-shrink:0;opacity:0.4;transition:opacity .15s;line-height:1;}
+.img-toggle:hover{opacity:1;}
+.img-toggle.has-img{opacity:1;}
+.due-toggle{position:relative;display:inline-flex;cursor:pointer;font-size:14px;padding:0 3px;flex-shrink:0;opacity:0.4;transition:opacity .15s;line-height:1;}
+.due-toggle:hover{opacity:1;}
+.due-toggle.has-due{opacity:1;}
+.due-toggle.has-due::after{content:'';position:absolute;bottom:-2px;right:0;width:5px;height:5px;border-radius:50%;background:var(--p1-text);}
+.sub-toggle{background:none;border:none;cursor:pointer;font-size:12px;padding:1px 5px;flex-shrink:0;opacity:0.4;transition:opacity .15s;line-height:1.4;color:var(--text-muted);border-radius:10px;}
+.sub-toggle:hover{opacity:1;background:var(--bg);}
+.sub-toggle.has-subs{opacity:1;color:var(--blue);font-weight:600;}
+.subs-row{padding:0 16px 10px 45px;display:none;}
+.subs-row.visible{display:block;}
+.subs-list{background:var(--bg);border-radius:8px;padding:8px 10px;}
+.sub-item{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border);}
+.sub-item:last-child{border-bottom:none;}
+.sub-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:white;cursor:pointer;background:white;}
+.sub-item.done .sub-check{background:var(--done);border-color:var(--done);}
+.sub-item.done .sub-text-inp{text-decoration:line-through;color:var(--text-light);}
+.sub-text-inp{flex:1;font-family:'Sarabun',sans-serif;font-size:13px;border:none;background:transparent;outline:none;padding:3px 4px;border-radius:5px;min-width:0;}
+.sub-text-inp:focus{background:white;box-shadow:0 0 0 1.5px var(--blue);}
+.sub-del{background:none;border:none;color:var(--text-light);cursor:pointer;font-size:12px;padding:2px 3px;opacity:0.5;flex-shrink:0;}
+.sub-del:hover{opacity:1;color:#e34948;}
+.sub-add-row{display:flex;gap:6px;margin-top:6px;}
+.sub-add-inp{flex:1;font-family:'Sarabun',sans-serif;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:5px 9px;outline:none;}
+.sub-add-inp:focus{border-color:var(--blue);}
+.sub-add-btn{font-family:'Sarabun',sans-serif;font-size:13px;background:var(--blue);color:white;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;flex-shrink:0;}
+.img-preview{margin-top:8px;}
+.img-preview img{max-width:100%;max-height:280px;border-radius:8px;border:1px solid var(--border);cursor:pointer;display:block;}
+.img-remove{margin-top:6px;font-size:11px;padding:3px 10px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);cursor:pointer;}
+.img-remove:hover{border-color:#e34948;color:#e34948;}
+.img-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+.img-modal.open{display:flex;}
+.img-modal img{max-width:95%;max-height:95%;border-radius:8px;}
+.memo-inp{width:100%;box-sizing:border-box;font-family:'Sarabun',sans-serif;font-size:13.5px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:9px 12px;resize:vertical;outline:none;line-height:1.6;min-height:60px;transition:border-color .15s;}
+.memo-inp:focus{border-color:var(--blue);min-height:80px;}
+
+/* ADD TASK */
+.add-task-row{display:none;padding:9px 16px;border-top:1px dashed var(--border);}
+body.edit-mode .add-task-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
+.add-task-inp{font-family:'Sarabun',sans-serif;font-size:14px;border:1px solid var(--border);border-radius:6px;padding:5px 9px;outline:none;flex:1;min-width:100px;transition:border-color .15s;}
+.add-task-inp:focus{border-color:var(--blue);}
+.add-task-phase{font-family:'Sarabun',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:6px;padding:5px 7px;outline:none;cursor:pointer;}
+.add-task-btn{font-family:'Sarabun',sans-serif;font-size:13px;background:var(--blue);color:white;border:none;border-radius:6px;padding:5px 13px;cursor:pointer;white-space:nowrap;}
+.add-task-btn:hover{opacity:0.85;}
+
+/* ADD SECTION */
+.add-sec-wrap{display:none;max-width:960px;margin:0 auto 14px;padding:0 24px;}
+body.edit-mode .add-sec-wrap{display:block;}
+.add-sec-btn{font-family:'Sarabun',sans-serif;font-size:14px;background:var(--surface);color:var(--blue);border:2px dashed var(--blue);border-radius:12px;padding:11px 18px;cursor:pointer;width:100%;text-align:center;transition:background .15s;}
+.add-sec-btn:hover{background:var(--blue-light);}
+
+.save-note{text-align:center;font-size:11px;color:var(--text-light);padding:0 24px 24px;max-width:960px;margin:0 auto;}
+
+.view-tabs{max-width:960px;margin:0 auto;padding:8px 24px 0;display:flex;gap:6px;}
+.view-tab{font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;padding:7px 16px;border:none;border-radius:10px 10px 0 0;background:transparent;color:var(--text-muted);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;}
+.view-tab:hover{color:var(--blue);}
+.view-tab.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--surface);}
+
+.cal-view{max-width:960px;margin:0 auto;padding:12px 24px 50px;}
+.cal-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.cal-nav-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--blue);font-size:15px;cursor:pointer;}
+.cal-nav-btn:hover{background:var(--bg);}
+.cal-month-label{font-family:'Poppins',sans-serif;font-weight:600;font-size:16px;color:var(--text);flex:1;text-align:center;}
+.cal-today-btn{font-family:'Sarabun',sans-serif;font-size:12px;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);cursor:pointer;}
+.cal-today-btn:hover{border-color:var(--blue);color:var(--blue);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-dow{font-size:11px;color:var(--text-muted);text-align:center;padding:4px 0;font-weight:600;}
+.cal-cell{aspect-ratio:1;border-radius:8px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;color:var(--text);position:relative;background:var(--surface);}
+.cal-cell.other-month{opacity:0.3;}
+.cal-cell.today{background:var(--p2-bg);border-color:var(--p2-border);font-weight:700;color:var(--p2-text);}
+.cal-cell.launch{background:var(--p1-bg);border-color:var(--p1-border);font-weight:700;color:var(--p1-text);}
+.cal-cell.today.launch{background:linear-gradient(135deg,var(--p2-bg) 50%,var(--p1-bg) 50%);}
+.cal-cell-label{font-size:8px;margin-top:2px;line-height:1.2;text-align:center;padding:0 2px;overflow:hidden;}
+.cal-legend{display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--text-muted);flex-wrap:wrap;}
+.cal-legend span{display:flex;align-items:center;gap:5px;}
+.cal-dot-task{background:var(--pink-mid);}
+.cal-cell{cursor:pointer;}
+.cal-cell.has-tasks{border-width:1.5px;}
+.cal-cell:hover{border-color:var(--blue);}
+.cal-task-badge{position:absolute;bottom:3px;right:3px;min-width:15px;height:15px;border-radius:8px;background:var(--pink-mid);color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+.cal-task-badge.all-done{background:var(--done,#3B6D11);}
+.cal-day-detail{display:none;margin-top:14px;border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--surface);}
+.cal-day-detail.visible{display:block;}
+.cal-detail-title{font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text);margin-bottom:8px;}
+.cal-detail-empty{font-size:12.5px;color:var(--text-muted);}
+.cal-detail-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;}
+.cal-detail-item:last-child{border-bottom:none;}
+.cal-detail-item.done .cal-detail-text{text-decoration:line-through;color:var(--text-light);}
+.cal-detail-check{flex-shrink:0;color:var(--done,#3B6D11);width:14px;}
+.cal-detail-text{flex:1;}
+.cal-detail-sec{font-size:10.5px;color:var(--text-muted);background:var(--bg);padding:2px 7px;border-radius:10px;flex-shrink:0;}
+.cal-dot{width:9px;height:9px;border-radius:3px;display:inline-block;}
+.cal-dot-today{background:var(--p2-text);}
+.cal-dot-launch{background:var(--p1-text);}
+.cal-dot-phase{background:var(--p3-text);}
+@media(max-width:700px){.cal-view{padding:10px 14px 40px;}.cal-cell{font-size:11px;}.cal-cell-label{display:none;}}
+
+/* EMPTY */
+.empty-proj{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:12px;color:var(--text-muted);}
+.empty-proj h2{font-family:'Poppins',sans-serif;font-size:20px;color:var(--text);}
+.empty-proj p{font-size:14px;}
+.empty-proj button{font-family:'Sarabun',sans-serif;font-size:14px;background:var(--blue);color:white;border:none;border-radius:8px;padding:10px 24px;cursor:pointer;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:16px;padding:28px 28px 24px;width:380px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.modal-title{font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;margin-bottom:16px;}
+.modal-field{margin-bottom:12px;}
+.modal-label{font-size:13px;color:var(--text-muted);margin-bottom:5px;}
+.modal-inp{font-family:'Sarabun',sans-serif;font-size:14px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;outline:none;width:100%;transition:border-color .15s;}
+.modal-inp:focus{border-color:var(--blue);}
+.modal-emoji-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.emoji-opt{font-size:20px;cursor:pointer;padding:4px 6px;border-radius:6px;border:2px solid transparent;transition:all .15s;}
+.emoji-opt:hover{background:var(--bg);}
+.emoji-opt.selected{border-color:var(--blue);background:var(--blue-light);}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+.modal-cancel{font-family:'Sarabun',sans-serif;font-size:14px;background:none;border:1px solid var(--border);border-radius:8px;padding:7px 16px;cursor:pointer;color:var(--text-muted);}
+.modal-cancel:hover{border-color:var(--text-muted);}
+.modal-confirm{font-family:'Sarabun',sans-serif;font-size:14px;background:var(--blue);color:white;border:none;border-radius:8px;padding:7px 20px;cursor:pointer;font-weight:500;}
+.modal-confirm:hover{opacity:0.85;}
+
+/* MOBILE */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:150;}
+@media(max-width:700px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .overlay.open{display:block;}
+  .content{margin-left:0;}
+  .menu-btn{display:block;}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .main{padding:14px 14px 40px;}
+}
+
+/* ====== DASHBOARD ====== */
+.dash-toggle-row{max-width:960px;margin:0 auto;padding:8px 24px 0;display:flex;align-items:center;gap:8px;}
+.dash-toggle-btn{font-family:'Sarabun',sans-serif;font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.dash-toggle-btn:hover{border-color:var(--blue);color:var(--blue);}
+.dash-toggle-btn.on{background:var(--blue);color:white;border-color:var(--blue);}
+.dash-panel{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px 10px;display:none;}
+.dash-panel.visible{display:block;}
+.dash-inner{max-width:960px;margin:0 auto;}
+.dash-grid{display:grid;grid-template-columns:1fr 240px;gap:20px;align-items:start;}
+@media(max-width:700px){.dash-grid{grid-template-columns:1fr;}.dash-toggle-row{padding:8px 14px 0;}.dash-panel{padding:14px 14px 8px;}}
+.gantt-head{display:flex;margin-bottom:5px;padding-left:106px;}
+.gantt-head-item{flex:1;font-size:10px;color:var(--text-muted);text-align:center;}
+.gantt-row-wrap{display:flex;align-items:center;gap:0;margin-bottom:5px;}
+.gantt-label{width:100px;flex-shrink:0;font-size:11px;color:var(--text-muted);padding-right:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.gantt-track{flex:1;background:var(--bg);border-radius:4px;height:14px;position:relative;border:1px solid var(--border);overflow:hidden;}
+.gantt-bar-bg{position:absolute;top:2px;height:10px;border-radius:2px;opacity:.18;}
+.gantt-bar-done{position:absolute;top:0;left:0;height:100%;border-radius:3px;transition:width .5s;}
+.gantt-pct{position:absolute;right:3px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;color:white;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.3);}
+.gantt-today{position:absolute;top:0;bottom:0;width:1.5px;background:#e34948;opacity:.7;pointer-events:none;}
+.donut-side{display:flex;align-items:flex-start;gap:14px;}
+.donut-legend-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;padding-top:4px;}
+.donut-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);}
+.donut-legend-item span.lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.donut-legend-item span.pct{font-weight:600;color:var(--text);flex-shrink:0;}
+.donut-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.color-swatch-sm{width:16px;height:16px;border-radius:4px;border:1px solid var(--border);cursor:pointer;position:relative;flex-shrink:0;}
+.color-swatch-sm input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;border:none;padding:0;}
+</style>
+</head>
+<body>
+
+<div id="app-loading" style="position:fixed;inset:0;background:#FAFAF9;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-family:'Sarabun',sans-serif;color:#888780;">
+  <div style="font-size:28px;">🌸</div>
+  <div>กำลังซิงก์ข้อมูลทีม...</div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Project<span>.</span>list</div>
+    <div class="sub">Multi-project checklist</div>
+  </div>
+  <div class="sidebar-projects">
+    <div class="sidebar-section-title">โปรเจค</div>
+    <div id="proj-list"></div>
+    <button class="add-proj-btn" onclick="openNewProjModal()">＋ เพิ่มโปรเจคใหม่</button>
+  </div>
+  <div class="sidebar-footer">
+    <button class="io-btn" onclick="exportData()">⬇️ Export ข้อมูล (.json)</button>
+    <button class="io-btn" onclick="document.getElementById('import-file').click()">⬆️ Import ข้อมูล</button>
+    <input type="file" id="import-file" accept=".json,application/json" style="display:none" onchange="importData(event)" />
+    <div class="sidebar-footer-text" style="margin-top:8px">✦ ข้อมูลซิงก์กับทีมอัตโนมัติ</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title" id="topbar-title" onclick="startEditProjName()" title="คลิกเพื่อแก้ไขชื่อ" style="cursor:pointer;display:flex;align-items:center;gap:6px;min-width:0;">
+        <span id="topbar-name-display">เลือกโปรเจค</span>
+        <span id="topbar-edit-hint" style="font-size:12px;opacity:0.45;flex-shrink:0;display:none">✎</span>
+      </div>
+      <input id="topbar-name-input" type="text"
+        style="display:none;font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;color:white;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.5);border-radius:8px;padding:4px 10px;outline:none;min-width:160px;max-width:260px;"
+        onblur="commitProjName()"
+        onkeydown="if(event.key==='Enter'||event.key==='Escape')this.blur()"
+      />
+      <div class="launch-badge" id="launch-badge" onclick="if(editMode) focusLaunchDate()" style="display:none">—</div>
+      <span id="sync-status" style="font-size:11px;color:rgba(255,255,255,0.6);white-space:nowrap;"></span>
+      <button class="edit-btn" onclick="connectSheetPrompt()" title="เชื่อม/เปลี่ยน Google Sheet เพื่อแชร์ข้อมูลกับทีม">🔗</button>
+      <button class="edit-btn" onclick="refreshOrRetry()" title="ดึงข้อมูลล่าสุดจากทีม / ลองบันทึกใหม่">🔄</button>
+      <button class="edit-btn" id="edit-btn" onclick="toggleEditMode()" style="display:none">✏️ แก้ไข</button>
+    </div>
+  </div>
+
+  <div class="progress-panel" id="progress-panel" style="display:none">
+    <div class="progress-inner">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" id="s-done">0</div><div class="stat-label">เสร็จแล้ว</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-total">0</div><div class="stat-label">ทั้งหมด</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-pct">0%</div><div class="stat-label">ความคืบหน้า</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-days">—</div><div class="stat-label">วันเหลือ</div></div>
+      </div>
+      <div class="bar-wrap"><div class="bar-fill" id="bar" style="width:0%"></div></div>
+      <div class="bar-lbl" id="bar-lbl">0 / 0 รายการเสร็จ</div>
+    </div>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div class="settings-panel">
+    <div class="settings-inner">
+      <div class="settings-title">⚙️ ตั้งค่าโปรเจค</div>
+      <div class="settings-grid" id="phase-cards"></div>
+      <div class="launch-row">
+        <div class="launch-row-label">📅 วันที่ Deadline:</div>
+        <input type="date" class="launch-date-inp" id="launch-date-inp" onchange="updateLaunchDate(this.value)" />
+        <div class="launch-countdown" id="launch-countdown"></div>
+        <button class="del-proj-btn" onclick="deleteCurrentProject()">🗑 ลบโปรเจคนี้</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+  <div class="filters-wrap" id="filters-wrap"></div>
+
+  <!-- VIEW TABS -->
+  <div class="view-tabs" id="view-tabs" style="display:none">
+    <button class="view-tab active" id="tab-checklist" onclick="switchView('checklist')">✓ Checklist</button>
+    <button class="view-tab" id="tab-calendar" onclick="switchView('calendar')">📅 Calendar</button>
+  </div>
+
+  <!-- DASHBOARD TOGGLE -->
+  <div class="dash-toggle-row" id="dash-toggle-row" style="display:none">
+    <button class="dash-toggle-btn on" id="dash-btn" onclick="toggleDash()">📊 ภาพรวมโปรเจค</button>
+  </div>
+
+  <!-- DASHBOARD PANEL -->
+  <div class="dash-panel visible" id="dash-panel">
+    <div class="dash-inner">
+      <div class="dash-grid">
+        <!-- LEFT: Gantt -->
+        <div id="gantt-container"></div>
+        <!-- RIGHT: Donut + merged legend/color picker beside it -->
+        <div class="donut-side">
+          <svg id="donut-svg" width="110" height="110" viewBox="0 0 130 130" style="flex-shrink:0"></svg>
+          <div class="donut-legend-col" id="donut-legend"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <main class="main" id="main" style="margin-top:0"><div class="empty-proj"><h2>👋 ยินดีต้อนรับ</h2><p>เลือกหรือสร้างโปรเจคใหม่จากแถบซ้าย</p><button onclick="openNewProjModal()">＋ สร้างโปรเจคแรก</button></div></main>
+
+  <!-- CALENDAR VIEW -->
+  <div class="cal-view" id="cal-view" style="display:none">
+    <div class="cal-toolbar">
+      <button class="cal-nav-btn" onclick="calShiftMonth(-1)">←</button>
+      <div class="cal-month-label" id="cal-month-label"></div>
+      <button class="cal-nav-btn" onclick="calShiftMonth(1)">→</button>
+      <button class="cal-today-btn" onclick="calGoToday()">วันนี้</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <span><span class="cal-dot cal-dot-today"></span> วันนี้</span>
+      <span><span class="cal-dot cal-dot-launch"></span> Deadline / Launch</span>
+      <span><span class="cal-dot cal-dot-task"></span> มีงานกำหนดส่ง (ตัวเลข = งานค้าง)</span>
+    </div>
+    <div class="cal-day-detail" id="cal-day-detail"></div>
+  </div>
+
+  <div class="add-sec-wrap"><button class="add-sec-btn" onclick="addSection()">＋ เพิ่มหมวดหมู่ใหม่</button></div>
+  <div class="save-note" id="save-note" style="display:none">✦ ข้อมูลบันทึกในเครื่องนี้ — ใช้ปุ่ม Export/Import เพื่อ sync ข้ามเครื่อง</div>
+</div>
+
+<!-- NEW PROJECT MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">＋ สร้างโปรเจคใหม่</div>
+    <div class="modal-field">
+      <div class="modal-label">ชื่อโปรเจค</div>
+      <input class="modal-inp" id="modal-name" placeholder="เช่น Glimmer Sisters Launch" />
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">ไอคอน</div>
+      <div class="modal-emoji-row" id="emoji-row"></div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">วันที่ Deadline</div>
+      <input type="date" class="modal-inp" id="modal-date" />
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">ยกเลิก</button>
+      <button class="modal-confirm" onclick="createProject()">สร้างโปรเจค</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== STATE ==========
+const SK = 'glimmer_checklist_v1'; // localStorage key — saves in this browser; use Export/Import to sync across devices
+let DB = { projects: [], current: null };
+let editMode = false;
+let currentFilter = 'all';
+let selectedEmoji = '📋';
+let isPolling = false;
+
+const EMOJIS = ['📋','🚀','🌸','💄','🎨','🛍','📦','⭐','🎯','💡','🔥','✦','🏪','📱','🤝','⚖️','🧪','🎬','🌿','💎'];
+
+const DEFAULT_PHASES = [
+  { id:'p1', name:'ด่วน มิ.ย.–ก.ค.', date:'', cls:'p1-badge', dotColor:'var(--p1-text)' },
+  { id:'p2', name:'ส.ค.', date:'', cls:'p2-badge', dotColor:'var(--p2-text)' },
+  { id:'p3', name:'ก.ย.–พ.ย.', date:'', cls:'p3-badge', dotColor:'var(--p3-text)' },
+  { id:'p4', name:'ต่อเนื่อง', date:'', cls:'p4-badge', dotColor:'var(--p4-text)' },
+];
+
+// ========== PERSISTENCE (localStorage cache + optional Google Sheet sync) ==========
+let pendingRetry = null;
+let saveTimer = null;
+let saveInFlight = false;
+let saveQueued = false;
+const SHEET_URL_KEY = 'glimmer_sheet_sync_url';
+
+function getSheetUrl() { return localStorage.getItem(SHEET_URL_KEY) || ''; }
+function setSheetUrl(url) { if (url) localStorage.setItem(SHEET_URL_KEY, url); else localStorage.removeItem(SHEET_URL_KEY); }
+
+function updateSyncStatus(state) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  if (state === 'saving') {
+    el.innerHTML = '💾 กำลังบันทึก...';
+  } else if (state === 'saved') {
+    el.innerHTML = '✓ บันทึกแล้ว';
+    pendingRetry = null;
+    setTimeout(() => { if (el.innerHTML === '✓ บันทึกแล้ว') el.innerHTML = ''; }, 2000);
+  } else if (state === 'error') {
+    el.innerHTML = '⚠️ บันทึกไม่สำเร็จ <span style="text-decoration:underline;cursor:pointer" onclick="retrySaveNow()">ลองอีกครั้ง</span>';
+  } else if (state === 'synced') {
+    el.innerHTML = '🔄 อัปเดตจากทีมแล้ว';
+    setTimeout(() => { if (el.innerHTML === '🔄 อัปเดตจากทีมแล้ว') el.innerHTML = ''; }, 2000);
+  }
+}
+
+function save() {
+  updateSyncStatus('saving');
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { saveTimer = null; flushSave(0); }, 600);
+}
+
+function retrySaveNow() { flushSave(0); }
+function refreshOrRetry() {
+  if (pendingRetry || saveTimer || saveInFlight) { flushSave(0); }
+  else { pollRemote(true); }
+}
+
+async function flushSave(retryCount) {
+  retryCount = retryCount || 0;
+  if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+  // always write the fast local cache first
+  try { localStorage.setItem(SK, JSON.stringify(DB)); } catch (e) { console.error('local cache save failed:', e); }
+
+  const url = getSheetUrl();
+  if (!url) { updateSyncStatus('saved'); pendingRetry = null; return; }
+
+  if (saveInFlight) { saveQueued = true; return; }
+  saveInFlight = true;
+  updateSyncStatus('saving');
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(DB),
+    });
+    updateSyncStatus('saved');
+    pendingRetry = null;
+    saveInFlight = false;
+    if (saveQueued) { saveQueued = false; flushSave(0); }
+  } catch (e) {
+    console.error('Sheet sync save failed (attempt ' + (retryCount + 1) + '):', e);
+    saveInFlight = false;
+    if (retryCount < 2) {
+      setTimeout(() => flushSave(retryCount + 1), 800 * (retryCount + 1));
+    } else {
+      updateSyncStatus('error');
+      pendingRetry = () => flushSave(0);
+    }
+  }
+}
+
+function loadDB() {
+  try {
+    const raw = localStorage.getItem(SK);
+    if (raw) { DB = JSON.parse(raw); return; }
+  } catch (e) {}
+  DB = { projects: [], current: null };
+}
+
+// Pull latest team data from the Google Sheet. Skips while typing/editing/saving so it never clobbers in-progress input.
+async function pollRemote(manual) {
+  const url = getSheetUrl();
+  if (!url) { if (manual) alert('ยังไม่ได้เชื่อม Google Sheet — กดปุ่ม 🔗 เพื่อเชื่อมต่อก่อน'); return; }
+  const active = document.activeElement;
+  const typing = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT');
+  if (isPolling) return;
+  if (!manual && (editMode || typing || saveTimer || saveInFlight)) return;
+  isPolling = true;
+  try {
+    const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now());
+    const text = await res.text();
+    const remote = JSON.parse(text);
+    if (remote && remote.projects) {
+      const remoteStr = JSON.stringify(remote);
+      if (remoteStr !== JSON.stringify(DB)) {
+        DB = remote;
+        try { localStorage.setItem(SK, remoteStr); } catch (e) {}
+        renderAll();
+      }
+      updateSyncStatus('synced');
+    }
+  } catch (e) {
+    console.error('Pull from sheet failed:', e);
+    if (manual) alert('ดึงข้อมูลไม่สำเร็จ — ตรวจสอบลิงก์ Google Sheet อีกครั้ง');
+  }
+  isPolling = false;
+}
+
+function connectSheetPrompt() {
+  const current = getSheetUrl();
+  const url = prompt('วางลิงก์ Google Apps Script Web App ที่นี่\nเพื่อแชร์ข้อมูลกับทีมแบบเรียลไทม์:', current);
+  if (url === null) return;
+  setSheetUrl(url.trim());
+  if (url.trim()) {
+    updateSyncStatus('saving');
+    pollRemote(true).then(() => flushSave(0));
+  }
+}
+
+function getProj() { return DB.projects.find(p => p.id === DB.current) || null; }
+
+// ========== EXPORT / IMPORT (works anywhere — no storage API needed) ==========
+function exportData() {
+  const stamp = new Date().toISOString().slice(0,10);
+  const blob = new Blob([JSON.stringify(DB, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'GlimmerSisters_Checklist_' + stamp + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || !Array.isArray(data.projects)) throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');
+      if (!confirm('Import จะเขียนทับข้อมูลทั้งหมดที่มีอยู่ตอนนี้ ยืนยันไหม?')) { event.target.value = ''; return; }
+      DB = data;
+      if (!DB.current || !DB.projects.find(p => p.id === DB.current)) {
+        DB.current = DB.projects.length ? DB.projects[0].id : null;
+      }
+      flushSave(0);        // push imported data to shared storage too
+      renderAll();
+      alert('✓ Import สำเร็จ — โหลด ' + DB.projects.length + ' โปรเจค');
+    } catch (err) {
+      alert('❌ Import ไม่สำเร็จ: ' + err.message);
+    }
+    event.target.value = ''; // allow re-importing same file
+  };
+  reader.onerror = function() { alert('❌ อ่านไฟล์ไม่สำเร็จ'); event.target.value = ''; };
+  reader.readAsText(file);
+}
+
+function getPhases(proj) {
+  if (!proj.phases) proj.phases = JSON.parse(JSON.stringify(DEFAULT_PHASES));
+  return proj.phases;
+}
+
+// ========== SIDEBAR ==========
+function renderSidebar() {
+  const list = document.getElementById('proj-list');
+  list.innerHTML = '';
+  DB.projects.forEach(p => {
+    const total = p.sections ? p.sections.reduce((a,s) => a + s.items.length, 0) : 0;
+    const done = p.sections ? p.sections.reduce((a,s) => a + s.items.filter((_,i) => (p.state||{})[s.id+'_'+i]).length, 0) : 0;
+    const pct = total ? Math.round(done/total*100) : 0;
+    const btn = document.createElement('button');
+    btn.className = 'proj-btn' + (p.id === DB.current ? ' active' : '');
+    btn.innerHTML = `<span class="proj-icon">${p.icon||'📋'}</span><span class="proj-name">${p.name}</span><span class="proj-badge">${pct}%</span>`;
+    btn.onclick = () => { DB.current = p.id; save(); renderAll(); closeSidebar(); };
+    list.appendChild(btn);
+  });
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ========== MODAL ==========
+function openNewProjModal() {
+  document.getElementById('modal-name').value = '';
+  document.getElementById('modal-date').value = '';
+  selectedEmoji = '📋';
+  const row = document.getElementById('emoji-row');
+  row.innerHTML = EMOJIS.map(e => `<div class="emoji-opt${e===selectedEmoji?' selected':''}" onclick="selectEmoji('${e}',this)">${e}</div>`).join('');
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('modal-name').focus(), 100);
+}
+
+function selectEmoji(e, el) {
+  selectedEmoji = e;
+  document.querySelectorAll('.emoji-opt').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function createProject() {
+  const name = document.getElementById('modal-name').value.trim();
+  if (!name) { document.getElementById('modal-name').focus(); return; }
+  const proj = {
+    id: 'proj_' + Date.now(),
+    name, icon: selectedEmoji,
+    launchDate: document.getElementById('modal-date').value || '',
+    phases: JSON.parse(JSON.stringify(DEFAULT_PHASES)),
+    sections: [], state: {}
+  };
+  DB.projects.push(proj);
+  DB.current = proj.id;
+  save(); closeModal(); renderAll();
+}
+
+function deleteCurrentProject() {
+  const proj = getProj();
+  if (!proj) return;
+  if (!confirm(`ลบโปรเจค "${proj.name}" ทั้งหมดเลยไหม?`)) return;
+  DB.projects = DB.projects.filter(p => p.id !== DB.current);
+  DB.current = DB.projects.length ? DB.projects[0].id : null;
+  save(); editMode = false; document.body.classList.remove('edit-mode'); renderAll();
+}
+
+// ========== EDIT MODE ==========
+function toggleEditMode() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  const btn = document.getElementById('edit-btn');
+  btn.textContent = editMode ? '✓ เสร็จแล้ว' : '✏️ แก้ไข';
+  btn.classList.toggle('active', editMode);
+  if (!editMode) { save(); renderMain(); }
+}
+
+function focusLaunchDate() { document.getElementById('launch-date-inp').focus(); }
+
+// ========== PHASE SETTINGS ==========
+function renderPhaseCards() {
+  const proj = getProj(); if (!proj) return;
+  const phases = getPhases(proj);
+  const container = document.getElementById('phase-cards');
+  container.innerHTML = phases.map((ph, i) => `
+    <div class="phase-card">
+      <div class="phase-card-head">Phase ${i+1}</div>
+      <input class="phase-name-inp" value="${ph.name}" placeholder="ชื่อ phase..." style="color:var(--${ph.id}-text);border-color:var(--${ph.id}-border);"
+        oninput="updatePhaseName(${i}, this.value)" />
+      <input class="phase-date-inp" value="${ph.date}" placeholder="เช่น ก.ค. / 11 พ.ย. / Q3"
+        oninput="updatePhaseDate(${i}, this.value)" />
+    </div>`).join('');
+}
+
+function updatePhaseName(idx, val) {
+  const proj = getProj(); if (!proj) return;
+  getPhases(proj)[idx].name = val;
+  save(); refreshPhaseBadges(); renderLegend(); renderFilters();
+}
+
+function updatePhaseDate(idx, val) {
+  const proj = getProj(); if (!proj) return;
+  getPhases(proj)[idx].date = val;
+  save(); refreshPhaseBadges(); renderLegend(); renderFilters();
+}
+
+function phaseLabel(ph) {
+  return ph.date ? `${ph.name} (${ph.date})` : ph.name;
+}
+
+function refreshPhaseBadges() {
+  const proj = getProj(); if (!proj) return;
+  const phases = getPhases(proj);
+  phases.forEach(ph => {
+    document.querySelectorAll(`.phase-badge.${ph.id}-badge`).forEach(el => el.textContent = phaseLabel(ph));
+    document.querySelectorAll(`.phase-select option[value="${ph.id}"]`).forEach(el => el.textContent = phaseLabel(ph));
+    document.querySelectorAll(`.add-task-phase option[value="${ph.id}"]`).forEach(el => el.textContent = phaseLabel(ph));
+  });
+}
+
+// ========== LAUNCH DATE ==========
+function updateLaunchDate(val) {
+  const proj = getProj(); if (!proj) return;
+  proj.launchDate = val; save();
+  updateLaunchBadge();
+}
+
+function updateLaunchBadge() {
+  const proj = getProj(); if (!proj) return;
+  const badge = document.getElementById('launch-badge');
+  const countdown = document.getElementById('launch-countdown');
+  if (proj.launchDate) {
+    const d = new Date(proj.launchDate);
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy = d.getFullYear();
+    badge.textContent = `🗓 ${dd}.${mm}.${yy}`;
+    const diff = Math.max(0, Math.ceil((d - new Date()) / 86400000));
+    document.getElementById('s-days').textContent = diff;
+    if (countdown) countdown.textContent = `อีก ${diff} วัน`;
+  } else {
+    badge.textContent = '🗓 ตั้ง deadline';
+    document.getElementById('s-days').textContent = '—';
+    if (countdown) countdown.textContent = '';
+  }
+}
+
+// ========== LEGEND + FILTERS ==========
+function renderLegend() {
+  const proj = getProj(); if (!proj) return;
+  const phases = getPhases(proj);
+  document.getElementById('legend').innerHTML = phases.map(ph =>
+    `<div class="legend-item"><div class="legend-dot" style="background:var(--${ph.id}-text)"></div>${phaseLabel(ph)}</div>`).join('');
+}
+
+function renderFilters() {
+  const proj = getProj(); if (!proj) return;
+  const phases = getPhases(proj);
+  const wrap = document.getElementById('filters-wrap');
+  wrap.innerHTML = `<button class="filter-btn${currentFilter==='all'?' active':''}" data-filter="all">ทั้งหมด</button>`
+    + phases.map(ph => `<button class="filter-btn${currentFilter===ph.id?' active':''}" data-filter="${ph.id}">${phaseLabel(ph)}</button>`).join('');
+  wrap.querySelectorAll('.filter-btn').forEach(b => b.addEventListener('click', () => applyFilter(b.dataset.filter)));
+}
+
+function applyFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.item').forEach(el => {
+    const hide = f !== 'all' && el.dataset.phase !== f;
+    el.classList.toggle('hidden', hide);
+    const mr = document.querySelector(`[data-memorow="${el.dataset.key}"]`);
+    if (mr) mr.style.display = hide ? 'none' : '';
+  });
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+}
+
+// ========== STATS ==========
+function updateStats() {
+  const proj = getProj(); if (!proj) return;
+  let total = 0, done = 0;
+  (proj.sections||[]).forEach(s => s.items.forEach((_,i) => { total++; if ((proj.state||{})[s.id+'_'+i]) done++; }));
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-pct').textContent = pct + '%';
+  document.getElementById('bar').style.width = pct + '%';
+  document.getElementById('bar-lbl').textContent = done + ' / ' + total + ' รายการเสร็จ';
+  updateLaunchBadge();
+  renderSidebar();
+  renderDashboard();
+}
+
+// ========== CHECKLIST ACTIONS ==========
+function toggleItem(sid, idx, event) {
+  if (editMode) return;
+  if (event && event.target.closest('.memo-toggle,.memo-row')) return;
+  const proj = getProj(); if (!proj) return;
+  if (!proj.state) proj.state = {};
+  const key = sid+'_'+idx;
+  proj.state[key] = !proj.state[key];
+  save(); updateStats();
+  const el = document.querySelector(`[data-key="${key}"]`);
+  if (el) { el.classList.toggle('done', proj.state[key]); el.querySelector('.check-icon').style.display = proj.state[key]?'block':'none'; }
+  updateSectionCount(sid);
+}
+
+function updateSectionCount(sid) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid); if (!sec) return;
+  const done = sec.items.filter((_,i) => (proj.state||{})[sid+'_'+i]).length;
+  const el = document.querySelector(`[data-sec="${sid}"] .sec-count`);
+  if (el) el.textContent = done+'/'+sec.items.length;
+}
+
+function toggleSection(sid) {
+  const el = document.querySelector(`[data-sec="${sid}"]`);
+  if (el) el.classList.toggle('open');
+}
+
+function toggleMemo(sid, idx, event) {
+  event.stopPropagation();
+  const key = sid+'_'+idx;
+  const mr = document.querySelector(`[data-memorow="${key}"]`);
+  if (mr) { const v = mr.classList.toggle('visible'); if (v) mr.querySelector('.memo-inp').focus(); }
+}
+
+function saveMemo(sid, idx, val) {
+  const proj = getProj(); if (!proj) return;
+  if (!proj.state) proj.state = {};
+  const k = 'memo_'+sid+'_'+idx;
+  if (val.trim()) proj.state[k] = val; else delete proj.state[k];
+  save();
+  const key = sid+'_'+idx;
+  const btn = document.querySelector(`[data-memobtn="${key}"]`);
+  if (btn) btn.classList.toggle('has-memo', !!val.trim());
+}
+
+function autoResize(el) { el.style.height='auto'; el.style.height=Math.max(60, el.scrollHeight)+'px'; }
+
+// ========== IMAGE ATTACHMENT ==========
+// Resize image before saving so localStorage doesn't fill up (max ~900px, JPEG quality 0.72)
+function attachImage(sid, idx, event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('กรุณาเลือกไฟล์รูปภาพ'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 900;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.72);
+      const proj = getProj(); if (!proj) return;
+      if (!proj.state) proj.state = {};
+      try {
+        proj.state['img_'+sid+'_'+idx] = dataUrl;
+        save();
+        renderMain();
+        const row = document.querySelector(`[data-memorow="${sid+'_'+idx}"]`);
+        if (row) row.classList.add('visible');
+      } catch (err) {
+        alert('รูปใหญ่เกินไป หรือพื้นที่เก็บเต็ม — ลองใช้รูปที่เล็กลง');
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function removeImage(sid, idx) {
+  const proj = getProj(); if (!proj) return;
+  if (!proj.state) return;
+  delete proj.state['img_'+sid+'_'+idx];
+  save();
+  renderMain();
+}
+
+function viewImage(key) {
+  const proj = getProj(); if (!proj) return;
+  const src = (proj.state||{})['img_'+key];
+  if (!src) return;
+  let modal = document.getElementById('img-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'img-modal';
+    modal.className = 'img-modal';
+    modal.onclick = () => modal.classList.remove('open');
+    modal.innerHTML = '<img alt="ภาพประกอบ task ขยาย">';
+    document.body.appendChild(modal);
+  }
+  modal.querySelector('img').src = src;
+  modal.classList.add('open');
+}
+
+function updateSecLabel(sid, val) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid); if (sec) { sec.label = val; save(); }
+}
+
+function changePhaseItem(sid, idx, val) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec && sec.items[idx]) { sec.items[idx].p = val; save(); }
+}
+
+function updateItemText(sid, idx, val) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec && sec.items[idx]) { sec.items[idx].t = val; save(); }
+}
+
+function updateItemNote(sid, idx, val) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec && sec.items[idx]) { sec.items[idx].n = val; save(); }
+}
+
+function updateItemDue(sid, idx, val) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec && sec.items[idx]) {
+    sec.items[idx].due = val;
+    save();
+    renderMain();
+    if (currentView === 'calendar') renderCalendar();
+  }
+}
+
+// ========== SUBTASKS ==========
+function toggleSubs(sid, idx, event) {
+  if (event) event.stopPropagation();
+  const key = sid + '_' + idx;
+  const row = document.querySelector(`[data-subsrow="${key}"]`);
+  if (row) row.classList.toggle('visible');
+}
+
+function addSubtask(sid, idx) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (!sec || !sec.items[idx]) return;
+  const inp = document.getElementById('newsub_' + sid + '_' + idx);
+  const text = inp.value.trim();
+  if (!text) { inp.focus(); return; }
+  if (!sec.items[idx].subs) sec.items[idx].subs = [];
+  sec.items[idx].subs.push({ text, done: false, due: '' });
+  save();
+  renderMain();
+  const row = document.querySelector(`[data-subsrow="${sid}_${idx}"]`);
+  if (row) row.classList.add('visible');
+  if (currentView === 'calendar') renderCalendar();
+}
+
+function toggleSubtask(sid, idx, si) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec && sec.items[idx] && sec.items[idx].subs && sec.items[idx].subs[si]) {
+    sec.items[idx].subs[si].done = !sec.items[idx].subs[si].done;
+    save();
+    renderMain();
+    const row = document.querySelector(`[data-subsrow="${sid}_${idx}"]`);
+    if (row) row.classList.add('visible');
+    if (currentView === 'calendar') renderCalendar();
+  }
+}
+
+function updateSubtaskText(sid, idx, si, val) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec && sec.items[idx] && sec.items[idx].subs && sec.items[idx].subs[si]) {
+    sec.items[idx].subs[si].text = val;
+    save();
+  }
+}
+
+function updateSubtaskDue(sid, idx, si, val) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec && sec.items[idx] && sec.items[idx].subs && sec.items[idx].subs[si]) {
+    sec.items[idx].subs[si].due = val;
+    save();
+    renderMain();
+    const row = document.querySelector(`[data-subsrow="${sid}_${idx}"]`);
+    if (row) row.classList.add('visible');
+    if (currentView === 'calendar') renderCalendar();
+  }
+}
+
+function deleteSubtask(sid, idx, si) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec && sec.items[idx] && sec.items[idx].subs) {
+    sec.items[idx].subs.splice(si, 1);
+    save();
+    renderMain();
+    const row = document.querySelector(`[data-subsrow="${sid}_${idx}"]`);
+    if (row) row.classList.add('visible');
+    if (currentView === 'calendar') renderCalendar();
+  }
+}
+
+function deleteSection(sid) {
+  if (!confirm('ลบหมวดหมู่นี้ทั้งหมด?')) return;
+  const proj = getProj(); if (!proj) return;
+  proj.sections = (proj.sections||[]).filter(s => s.id !== sid);
+  save(); renderMain(); updateStats();
+}
+
+function deleteItem(sid, idx) {
+  const proj = getProj(); if (!proj) return;
+  const sec = (proj.sections||[]).find(s => s.id === sid); if (!sec) return;
+  // remap state — handles plain (done), memo_, and img_ prefixed keys
+  const newState = {};
+  Object.keys(proj.state||{}).forEach(k => {
+    let prefix = '';
+    if (k.startsWith('memo_'+sid+'_')) prefix = 'memo_';
+    else if (k.startsWith('img_'+sid+'_')) prefix = 'img_';
+    else if (k.startsWith(sid+'_')) prefix = '';
+    else { newState[k] = proj.state[k]; return; }  // unrelated key, keep as-is
+    const numPart = k.replace(prefix+sid+'_','');
+    const ki = parseInt(numPart);
+    if (isNaN(ki) || ki===idx) return;   // drop the deleted item's keys
+    const ni = ki>idx ? ki-1 : ki;
+    newState[prefix+sid+'_'+ni] = proj.state[k];
+  });
+  proj.state = newState;
+  sec.items.splice(idx,1);
+  save(); renderMain(); updateStats(); applyFilter(currentFilter);
+}
+
+function addTask(sid) {
+  const proj = getProj(); if (!proj) return;
+  const inp = document.getElementById('newtask_'+sid);
+  const ph = document.getElementById('newphase_'+sid);
+  const text = inp.value.trim();
+  if (!text) { inp.focus(); return; }
+  const sec = (proj.sections||[]).find(s => s.id === sid);
+  if (sec) { sec.items.push({ t:text, n:'', p:ph.value }); save(); inp.value=''; renderMain(); updateStats(); applyFilter(currentFilter);
+    const secEl = document.querySelector(`[data-sec="${sid}"]`); if (secEl) secEl.classList.add('open');
+    if (!editMode) toggleEditMode();
+  }
+}
+
+function addSection() {
+  const proj = getProj(); if (!proj) return;
+  if (!proj.sections) proj.sections = [];
+  const id = 'sec_'+Date.now();
+  proj.sections.push({ id, icon:'📌', color:'#F0F0F0', label:'หมวดหมู่ใหม่', items:[] });
+  save(); renderMain(); updateStats();
+  const secEl = document.querySelector(`[data-sec="${id}"]`);
+  if (secEl) { secEl.classList.add('open'); secEl.querySelector('.sec-name-inp').focus(); }
+}
+
+// ========== RENDER MAIN ==========
+function renderMain() {
+  const proj = getProj();
+  const main = document.getElementById('main');
+  if (!proj) {
+    main.innerHTML='<div class="empty-proj"><h2>👋 ยินดีต้อนรับ</h2><p>เลือกหรือสร้างโปรเจคใหม่จากแถบซ้าย</p><button onclick="openNewProjModal()">＋ สร้างโปรเจคแรก</button></div>';
+    return;
+  }
+  // remember which sections are currently open so re-render doesn't collapse them
+  const openSecs = new Set();
+  document.querySelectorAll('.section.open').forEach(el => { if (el.dataset.sec) openSecs.add(el.dataset.sec); });
+
+  const phases = getPhases(proj);
+  main.innerHTML = '';
+
+  // wrapper grid
+  const grid = document.createElement('div');
+  grid.className = 'sections-grid';
+
+  (proj.sections||[]).forEach(sec => {
+    const done = sec.items.filter((_,i) => (proj.state||{})[sec.id+'_'+i]).length;
+    const secColor = getSectionColor(sec);
+    const div = document.createElement('div');
+    // keep previously-open sections open after re-render
+    div.className = openSecs.has(sec.id) ? 'section open' : 'section';
+    div.dataset.sec = sec.id;
+    div.innerHTML = `
+      <div class="sec-header" onclick="if(!event.target.closest('input,button')) toggleSection('${sec.id}')">
+        <div class="sec-icon" style="background:${secColor}">${sec.icon}</div>
+        <div class="sec-name">${sec.label}</div>
+        <input class="sec-name-inp" value="${sec.label.replace(/"/g,'&quot;')}" oninput="updateSecLabel('${sec.id}',this.value)" onclick="event.stopPropagation()" />
+        <div class="sec-count">${done}/${sec.items.length}</div>
+        <button class="del-sec-btn" onclick="event.stopPropagation();deleteSection('${sec.id}')" title="ลบหมวดหมู่">🗑</button>
+        <div class="sec-chevron">▼</div>
+      </div>
+      <div class="sec-body">
+        ${sec.items.map((item,i) => {
+          const key=sec.id+'_'+i;
+          const isDone=!!(proj.state||{})[key];
+          const memoVal=(proj.state||{})['memo_'+key]||'';
+          const imgVal=(proj.state||{})['img_'+key]||'';
+          const dueVal=item.due||'';
+          const subs=item.subs||[];
+          const subsDone=subs.filter(s=>s.done).length;
+          const ph = phases.find(p=>p.id===item.p)||phases[0];
+          return `
+          <div class="item${isDone?' done':''}" data-key="${key}" data-phase="${item.p}">
+            <div class="check-box" onclick="toggleItem('${sec.id}',${i},event)"><span class="check-icon" style="display:${isDone?'block':'none'}">✓</span></div>
+            <div class="item-content" onclick="if(!editMode)toggleItem('${sec.id}',${i},event)">
+              <div class="item-text">${item.t}</div>
+              <input class="item-text-inp" value="${item.t.replace(/"/g,'&quot;')}" oninput="updateItemText('${sec.id}',${i},this.value)" onclick="event.stopPropagation()" />
+              <div class="item-note">${item.n||''}</div>
+              <input class="item-note-inp" value="${(item.n||'').replace(/"/g,'&quot;')}" placeholder="หมายเหตุ..." oninput="updateItemNote('${sec.id}',${i},this.value)" onclick="event.stopPropagation()" />
+            </div>
+            <span class="phase-badge ${ph.id}-badge">${phaseLabel(ph)}</span>
+            <select class="phase-select" onchange="changePhaseItem('${sec.id}',${i},this.value)" onclick="event.stopPropagation()">
+              ${phases.map(p=>`<option value="${p.id}"${item.p===p.id?' selected':''}>${phaseLabel(p)}</option>`).join('')}
+            </select>
+            <label class="due-toggle${dueVal?' has-due':''}" title="${dueVal?'กำหนดส่ง: '+dueVal:'กำหนดวันส่ง'}" onclick="event.stopPropagation()">📅<input type="date" value="${dueVal}" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="updateItemDue('${sec.id}',${i},this.value)"></label>
+            <button class="sub-toggle${subs.length?' has-subs':''}" data-subbtn="${key}" onclick="toggleSubs('${sec.id}',${i},event)" title="หัวข้อย่อย">☰${subs.length?` ${subsDone}/${subs.length}`:''}</button>
+            <label class="img-toggle${imgVal?' has-img':''}" data-imgbtn="${key}" title="แนบรูป" onclick="event.stopPropagation()">📷<input type="file" accept="image/*" style="display:none" onchange="attachImage('${sec.id}',${i},event)"></label>
+            <button class="memo-toggle${memoVal?' has-memo':''}" data-memobtn="${key}" onclick="toggleMemo('${sec.id}',${i},event)" title="หมายเหตุ">✎</button>
+            <button class="del-item-btn" onclick="event.stopPropagation();deleteItem('${sec.id}',${i})" title="ลบ">✕</button>
+          </div>
+          <div class="memo-row${memoVal||imgVal?' visible':''}" data-memorow="${key}">
+            <textarea class="memo-inp" placeholder="หมายเหตุ..." rows="1"
+              oninput="autoResize(this);saveMemo('${sec.id}',${i},this.value)" onclick="event.stopPropagation()">${memoVal}</textarea>
+            <div class="img-preview" data-imgprev="${key}" style="${imgVal?'':'display:none'}">
+              ${imgVal?`<img src="${imgVal}" onclick="viewImage('${key}')" alt="ภาพประกอบ task"><button class="img-remove" onclick="removeImage('${sec.id}',${i})" title="ลบรูป">✕ ลบรูป</button>`:''}
+            </div>
+          </div>
+          <div class="subs-row${subs.length?' visible':''}" data-subsrow="${key}">
+            <div class="subs-list">
+              ${subs.map((s,si) => `
+                <div class="sub-item${s.done?' done':''}">
+                  <div class="sub-check" onclick="toggleSubtask('${sec.id}',${i},${si})">${s.done?'✓':''}</div>
+                  <input class="sub-text-inp" value="${(s.text||'').replace(/"/g,'&quot;')}" placeholder="หัวข้อย่อย..." oninput="updateSubtaskText('${sec.id}',${i},${si},this.value)" />
+                  <label class="due-toggle sub-due${s.due?' has-due':''}" title="${s.due?'กำหนดส่ง: '+s.due:'กำหนดวันส่ง'}">📅<input type="date" value="${s.due||''}" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="updateSubtaskDue('${sec.id}',${i},${si},this.value)"></label>
+                  <button class="sub-del" onclick="deleteSubtask('${sec.id}',${i},${si})" title="ลบ">✕</button>
+                </div>`).join('')}
+              <div class="sub-add-row">
+                <input class="sub-add-inp" id="newsub_${key}" type="text" placeholder="เพิ่มหัวข้อย่อย..." onkeydown="if(event.key==='Enter')addSubtask('${sec.id}',${i})" />
+                <button class="sub-add-btn" onclick="addSubtask('${sec.id}',${i})">＋</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+        <div class="add-task-row">
+          <input id="newtask_${sec.id}" class="add-task-inp" type="text" placeholder="พิมพ์ task ใหม่..." onkeydown="if(event.key==='Enter')addTask('${sec.id}')" />
+          <select id="newphase_${sec.id}" class="add-task-phase">
+            ${phases.map(p=>`<option value="${p.id}">${phaseLabel(p)}</option>`).join('')}
+          </select>
+          <button class="add-task-btn" onclick="addTask('${sec.id}')">＋ เพิ่ม</button>
+        </div>
+      </div>`;
+    grid.appendChild(div);
+  });
+
+  main.appendChild(grid);
+  document.querySelectorAll('.memo-inp').forEach(el=>autoResize(el));
+  if (editMode) document.body.classList.add('edit-mode');
+  applyFilter(currentFilter);
+}
+
+// ========== EDITABLE PROJECT NAME ==========
+function startEditProjName() {
+  const proj = getProj();
+  if (!proj) return;
+  const display = document.getElementById('topbar-name-display');
+  const inp = document.getElementById('topbar-name-input');
+  const hint = document.getElementById('topbar-edit-hint');
+  display.style.display = 'none';
+  hint.style.display = 'none';
+  inp.value = proj.name;
+  inp.style.display = 'block';
+  inp.focus();
+  inp.select();
+}
+
+function commitProjName() {
+  const proj = getProj();
+  const inp = document.getElementById('topbar-name-input');
+  const display = document.getElementById('topbar-name-display');
+  const hint = document.getElementById('topbar-edit-hint');
+  const val = inp.value.trim();
+  if (proj && val) {
+    proj.name = val;
+    save();
+    renderSidebar();
+  }
+  display.textContent = proj ? proj.name : 'เลือกโปรเจค';
+  display.style.display = '';
+  hint.style.display = proj ? '' : 'none';
+  inp.style.display = 'none';
+}
+
+
+// ========== DASHBOARD ==========
+let dashVisible = true;
+
+function toggleDash() {
+  dashVisible = !dashVisible;
+  document.getElementById('dash-panel').classList.toggle('visible', dashVisible);
+  document.getElementById('dash-btn').classList.toggle('on', dashVisible);
+}
+
+function getSectionColor(sec) {
+  const proj = getProj();
+  return (proj && proj.sectionColors && proj.sectionColors[sec.id]) || sec.color || '#CCCCCC';
+}
+
+function setSectionColor(secId, color) {
+  const proj = getProj();
+  if (!proj) return;
+  if (!proj.sectionColors) proj.sectionColors = {};
+  proj.sectionColors[secId] = color;
+  save();
+  renderDashboard();
+  // update section header color live
+  const secEl = document.querySelector(`[data-sec="${secId}"] .sec-icon`);
+  if (secEl) secEl.style.background = color;
+}
+
+function renderDashboard() {
+  const proj = getProj();
+  if (!proj || !proj.sections || proj.sections.length === 0) return;
+  const phases = getPhases(proj);
+
+  const secStats = proj.sections.map(sec => {
+    const total = sec.items.length;
+    const done = sec.items.filter((_, i) => (proj.state || {})[sec.id + '_' + i]).length;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    const color = getSectionColor(sec);
+    const phaseIdxs = sec.items.map(it => phases.findIndex(p => p.id === it.p)).filter(x => x >= 0);
+    const minPh = phaseIdxs.length ? Math.min(...phaseIdxs) : 0;
+    const maxPh = phaseIdxs.length ? Math.max(...phaseIdxs) : phases.length - 1;
+    return { sec, total, done, pct, color, minPh, maxPh };
+  });
+
+  const nPhases = phases.length;
+
+  // ── Gantt ──
+  const ganttEl = document.getElementById('gantt-container');
+  let ganttHTML = `<div class="gantt-head">`;
+  phases.forEach(ph => { ganttHTML += `<div class="gantt-head-item">${ph.name}</div>`; });
+  ganttHTML += `</div>`;
+
+  secStats.forEach(({ sec, pct, color, minPh, maxPh }) => {
+    const left = (minPh / nPhases * 100).toFixed(1);
+    const rangeW = ((maxPh - minPh + 1) / nPhases * 100).toFixed(1);
+    const doneW = (parseFloat(rangeW) * pct / 100).toFixed(1);
+    ganttHTML += `
+      <div class="gantt-row-wrap">
+        <div class="gantt-label">${sec.icon || ''} ${sec.label.replace(/\(.*\)/, '').trim()}</div>
+        <div class="gantt-track">
+          <div style="position:absolute;top:0;left:${left}%;width:${rangeW}%;height:100%;border-radius:3px;background:${color};opacity:0.28"></div>
+          <div style="position:absolute;top:0;left:${left}%;width:${doneW}%;height:100%;border-radius:3px;background:${color};opacity:1;transition:width .4s"></div>
+          ${pct > 0 ? `<div style="position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45);pointer-events:none">${pct}%</div>` : ''}
+        </div>
+      </div>`;
+  });
+  ganttEl.innerHTML = ganttHTML;
+
+  // ── Donut ──
+  const r = 48, cx = 65, cy = 65, stroke = 18;
+  const circumference = 2 * Math.PI * r;
+  const total = secStats.reduce((a, s) => a + s.total, 0);
+  const overallDone = secStats.reduce((a, s) => a + s.done, 0);
+  const overallPct = total ? Math.round(overallDone / total * 100) : 0;
+  let offset = 0;
+  let paths = '';
+  secStats.forEach(({ total: t, color }) => {
+    const slice = total ? (t / total) * circumference : 0;
+    paths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-dasharray="${slice.toFixed(2)} ${circumference.toFixed(2)}" stroke-dashoffset="${(-offset).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    offset += slice;
+  });
+  document.getElementById('donut-svg').innerHTML = `
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#E8E6E0" stroke-width="${stroke}"/>
+    ${paths}
+    <text x="${cx}" y="${cy - 5}" text-anchor="middle" font-size="18" font-weight="600" fill="#1A1A1A" font-family="Poppins,sans-serif">${overallPct}%</text>
+    <text x="${cx}" y="${cy + 11}" text-anchor="middle" font-size="10" fill="#888780" font-family="Sarabun,sans-serif">เสร็จแล้ว</text>`;
+
+  let legendHTML = '';
+  secStats.forEach(({ sec, pct, color }) => {
+    legendHTML += `<div class="donut-legend-item">
+      <div class="color-swatch-sm" style="background:${color}"><input type="color" value="${color}" oninput="setSectionColor('${sec.id}', this.value)"></div>
+      <span class="lbl">${sec.label.replace(/\(.*\)/, '').trim()}</span>
+      <span class="pct">${pct}%</span>
+    </div>`;
+  });
+  document.getElementById('donut-legend').innerHTML = legendHTML;
+}
+
+// ========== VIEW SWITCHING (Checklist / Calendar) ==========
+let currentView = 'checklist';
+let calCursor = new Date(); calCursor.setDate(1);
+
+function switchView(view) {
+  currentView = view;
+  const isChecklist = view === 'checklist';
+  document.getElementById('tab-checklist').classList.toggle('active', isChecklist);
+  document.getElementById('tab-calendar').classList.toggle('active', !isChecklist);
+  document.getElementById('main').style.display = isChecklist ? '' : 'none';
+  document.querySelector('.add-sec-wrap').style.display = isChecklist ? '' : 'none';
+  document.getElementById('dash-toggle-row').style.display = isChecklist ? '' : 'none';
+  document.getElementById('dash-panel').classList.toggle('visible', isChecklist && dashVisible);
+  document.getElementById('cal-view').style.display = isChecklist ? 'none' : 'block';
+  if (!isChecklist) renderCalendar();
+}
+
+function calShiftMonth(delta) {
+  calCursor.setMonth(calCursor.getMonth() + delta);
+  renderCalendar();
+}
+function calGoToday() {
+  calCursor = new Date(); calCursor.setDate(1);
+  renderCalendar();
+}
+
+function getTasksByDueDate(proj) {
+  const map = {};
+  (proj.sections || []).forEach(sec => {
+    sec.items.forEach((item, i) => {
+      const secLabel = sec.label.replace(/\(.*\)/, '').trim();
+      if (item.due) {
+        if (!map[item.due]) map[item.due] = [];
+        const key = sec.id + '_' + i;
+        map[item.due].push({
+          text: item.t,
+          done: !!(proj.state || {})[key],
+          secLabel, secId: sec.id, idx: i, isSub: false,
+        });
+      }
+      (item.subs || []).forEach((s, si) => {
+        if (!s.due) return;
+        if (!map[s.due]) map[s.due] = [];
+        map[s.due].push({
+          text: `↳ ${item.t}: ${s.text}`,
+          done: !!s.done,
+          secLabel, secId: sec.id, idx: i, subIdx: si, isSub: true,
+        });
+      });
+    });
+  });
+  return map;
+}
+
+function renderCalendar() {
+  const proj = getProj();
+  const grid = document.getElementById('cal-grid');
+  const label = document.getElementById('cal-month-label');
+  const detail = document.getElementById('cal-day-detail');
+  const thaiMonths = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const y = calCursor.getFullYear(), m = calCursor.getMonth();
+  label.textContent = `${thaiMonths[m]} ${y + 543}`;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = fmtDateLocal(today);
+  const launchDate = proj && proj.launchDate ? new Date(proj.launchDate + 'T00:00:00') : null;
+  const tasksByDue = proj ? getTasksByDueDate(proj) : {};
+
+  const firstDow = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const daysInPrevMonth = new Date(y, m, 0).getDate();
+
+  const dows = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+  let html = dows.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+  const totalCells = Math.ceil((firstDow + daysInMonth) / 7) * 7;
+  for (let i = 0; i < totalCells; i++) {
+    const dayNum = i - firstDow + 1;
+    let cellDate, otherMonth = false, displayNum;
+    if (dayNum < 1) { cellDate = new Date(y, m - 1, daysInPrevMonth + dayNum); otherMonth = true; displayNum = cellDate.getDate(); }
+    else if (dayNum > daysInMonth) { cellDate = new Date(y, m + 1, dayNum - daysInMonth); otherMonth = true; displayNum = cellDate.getDate(); }
+    else { cellDate = new Date(y, m, dayNum); displayNum = dayNum; }
+    cellDate.setHours(0,0,0,0);
+    const dateStr = fmtDateLocal(cellDate);
+
+    const isToday = dateStr === todayStr;
+    const isLaunch = launchDate && dateStr === fmtDateLocal(launchDate);
+    const dayTasks = tasksByDue[dateStr] || [];
+    const pendingCount = dayTasks.filter(t => !t.done).length;
+
+    let cls = 'cal-cell';
+    if (otherMonth) cls += ' other-month';
+    if (isToday) cls += ' today';
+    if (isLaunch) cls += ' launch';
+    if (dayTasks.length) cls += ' has-tasks';
+
+    const launchTag = isLaunch ? '<div class="cal-cell-label">🚀 Launch</div>' : '';
+    const taskBadge = dayTasks.length ? `<div class="cal-task-badge${pendingCount===0?' all-done':''}">${pendingCount>0?pendingCount:'✓'}</div>` : '';
+    html += `<div class="${cls}" onclick="showCalDayDetail('${dateStr}')"><div>${displayNum}</div>${launchTag}${taskBadge}</div>`;
+  }
+  grid.innerHTML = html;
+
+  // keep the detail panel in sync if a day is currently selected
+  if (detail && detail.dataset.date) {
+    if (tasksByDue[detail.dataset.date] || detail.dataset.date === fmtDateLocal(launchDate||new Date(0))) {
+      showCalDayDetail(detail.dataset.date);
+    }
+  }
+}
+
+function fmtDateLocal(d) {
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function showCalDayDetail(dateStr) {
+  const proj = getProj(); if (!proj) return;
+  const detail = document.getElementById('cal-day-detail');
+  detail.dataset.date = dateStr;
+  const tasksByDue = getTasksByDueDate(proj);
+  const tasks = tasksByDue[dateStr] || [];
+  const d = new Date(dateStr + 'T00:00:00');
+  const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const dateLabel = `${d.getDate()} ${thaiMonths[d.getMonth()]} ${d.getFullYear()+543}`;
+  const isLaunch = proj.launchDate === dateStr;
+
+  if (!tasks.length && !isLaunch) {
+    detail.innerHTML = `<div class="cal-detail-empty">📅 ${dateLabel} — ไม่มีงานที่กำหนดส่งวันนี้</div>`;
+    detail.classList.add('visible');
+    return;
+  }
+  let html = `<div class="cal-detail-title">📅 ${dateLabel}${isLaunch?' — 🚀 วัน Launch':''}</div>`;
+  tasks.forEach(t => {
+    const toggleCall = t.isSub
+      ? `toggleSubtask('${t.secId}',${t.idx},${t.subIdx})`
+      : `toggleItem('${t.secId}',${t.idx},event)`;
+    html += `<div class="cal-detail-item${t.done?' done':''}" onclick="${toggleCall};showCalDayDetail('${dateStr}')">
+      <span class="cal-detail-check">${t.done?'✓':'○'}</span>
+      <span class="cal-detail-text">${t.text}</span>
+      <span class="cal-detail-sec">${t.secLabel}</span>
+    </div>`;
+  });
+  detail.innerHTML = html;
+  detail.classList.add('visible');
+}
+
+
+function renderAll() {
+  const proj = getProj();
+  const hasProj = !!proj;
+
+  const nameDisplay = document.getElementById('topbar-name-display');
+  const editHint = document.getElementById('topbar-edit-hint');
+  const nameInp = document.getElementById('topbar-name-input');
+  if (nameDisplay) { nameDisplay.textContent = proj ? proj.name : 'เลือกโปรเจค'; nameDisplay.style.display = ''; }
+  if (editHint) editHint.style.display = hasProj ? '' : 'none';
+  if (nameInp) nameInp.style.display = 'none';
+
+  document.getElementById('launch-badge').style.display = hasProj ? '' : 'none';
+  document.getElementById('edit-btn').style.display = hasProj ? '' : 'none';
+  document.getElementById('progress-panel').style.display = hasProj ? '' : 'none';
+  document.getElementById('view-tabs').style.display = hasProj ? '' : 'none';
+  document.getElementById('save-note').style.display = hasProj ? '' : 'none';
+  document.getElementById('dash-panel').classList.toggle('visible', hasProj && dashVisible);
+
+  if (hasProj) {
+    document.getElementById('launch-date-inp').value = proj.launchDate || '';
+    renderPhaseCards();
+    renderLegend();
+    renderFilters();
+    updateStats();
+    updateLaunchBadge();
+    renderDashboard();
+    switchView(currentView);
+  } else {
+    document.getElementById('legend').innerHTML = '';
+    document.getElementById('filters-wrap').innerHTML = '';
+    document.getElementById('progress-panel').style.display = 'none';
+    document.getElementById('dash-toggle-row').style.display = 'none';
+    document.getElementById('cal-view').style.display = 'none';
+  }
+  renderMain();
+  renderSidebar();
+}
+
+// ========== INIT WITH GLIMMER SISTERS ==========
+function init() {
+  loadDB();
+  ensureDefaultProject();
+  const loading = document.getElementById('app-loading');
+  if (loading) loading.style.display = 'none';
+  renderAll();
+  if (getSheetUrl()) { pollRemote(true); setInterval(() => pollRemote(false), 15000); }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && getSheetUrl()) pollRemote(false); });
+  // Flush any pending debounced change before the tab closes so nothing is lost.
+  window.addEventListener('beforeunload', () => { if (saveTimer) flushSave(0); });
+}
+
+function ensureDefaultProject() {
+if (!DB.projects) DB.projects = [];
+if (DB.projects.length === 0) {
+  const gsProj = {
+    id:'proj_gs', name:'Glimmer Sisters Launch', icon:'🌸',
+    launchDate:'2027-01-15',
+    phases:[
+      {id:'p1',name:'ด่วน',date:'ก.ย.–ต.ค. 2026',cls:'p1-badge',dotColor:'var(--p1-text)'},
+      {id:'p2',name:'Production',date:'พ.ย. 2026',cls:'p2-badge',dotColor:'var(--p2-text)'},
+      {id:'p3',name:'Stock & E-Com',date:'ธ.ค. 2026',cls:'p3-badge',dotColor:'var(--p3-text)'},
+      {id:'p4',name:'PR & Launch',date:'ม.ค. 2027',cls:'p4-badge',dotColor:'var(--p4-text)'},
+    ],
+    sections:[
+      {id:'milestones',icon:'🗓️',color:'#D6E8FA',label:'Key Milestones',items:[
+        {t:'Ref Photo Due',n:'15 ต.ค. 2026 — ต้องได้ ref ถ่ายรูป ก่อนเข้า mood board อนุมัติ',p:'p1'},
+        {t:'Sample to Marketing',n:'5 พ.ย. 2026 — ส่งตัวอย่างให้ MKT',p:'p2'},
+        {t:'Photo Shoot Date',n:'10 พ.ย. 2026 — วันถ่ายงาน (ต้องมี packaging mass production จริงพร้อมใช้)',p:'p2'},
+        {t:'Product Media Completion',n:'16 พ.ย. 2026 — ภาพ/วิดีโอสินค้าเสร็จสมบูรณ์ ใช้ลง e-commerce ทุก SKU',p:'p2'},
+        {t:'Product on Stock',n:'15 ธ.ค. 2026 — สินค้าเข้าคลัง',p:'p3'},
+        {t:'E-Commerce Content Readiness',n:'21 ธ.ค. 2026 — description, SEO, A+ content พร้อมทุก SKU',p:'p3'},
+        {t:'Marketplace Listing Completion',n:'28 ธ.ค. 2026 — ลงครบ Shopee/Lazada/LINE/Facebook (ยังไม่เปิดขาย)',p:'p3'},
+        {t:'PR Marketing Date',n:'8 ม.ค. 2027 — วันประชาสัมพันธ์ (ไม่มี event แล้ว เปลี่ยนเป็น PR seeding ส่งของให้ KOL/สื่อ)',p:'p4'},
+        {t:'Basket Open Date',n:'15 ม.ค. 2027 — เปิดตะกร้าขาย พร้อมกับ Official Launch',p:'p4'},
+        {t:'Official Launch Date ✦',n:'15 ม.ค. 2027 — เปิดตัวอย่างเป็นทางการ (online-only ไม่มี pop-up)',p:'p4'},
+      ]},
+      {id:'formula',icon:'🧪',color:'#D6E8FA',label:'สูตรและ R&D (น้องมีน)',items:[
+        {t:'Finalize formula Blush On — HydroBloom + Glimmer Shot',n:'ยืนยัน water-burst texture + buildable glow',p:'p1'},
+        {t:'ทดสอบ stability formula (heat/humidity test)',n:'อย่างน้อย 3 เดือนก่อน mass production',p:'p1'},
+        {t:'ทดสอบความปลอดภัยบริเวณตา (ophthalmic test)',n:'จำเป็นถ้าจะ claim multi-use eye+cheek+lip',p:'p1'},
+        {t:'ทดสอบ Water & Sweat resistance',n:'ทนตลอดวันเรียน — ต้องมีผล test ยืนยัน',p:'p1'},
+        {t:'ยืนยัน ingredient grade — Damascus Rose + First Love Strawberry',n:'ยืนยัน supplier + COA document',p:'p1'},
+        {t:'ทำ safety assessment / MSDS document',n:'ต้องมีก่อน production และการขาย',p:'p1'},
+        {t:'ทำ consumer use test กับ target group (อายุ 13–18)',n:'ขอ feedback จริงก่อน launch',p:'p1'},
+        {t:'ยืนยัน production quantity (MOQ) กับ manufacturer',n:'',p:'p1'},
+      ]},
+      {id:'oryor',icon:'✅',color:'#EAF3DE',label:'จดแจ้ง อย. — เสร็จแล้ว',items:[
+        {t:'จดแจ้งเครื่องสำอางครบทุก SKU',n:'เสร็จสมบูรณ์แล้ว ✅ ไม่อยู่ใน risk list อีกต่อไป',p:'p1'},
+        {t:'อัปเดตเลข อย. ลง artwork packaging',n:'ใช้เลขที่ได้รับ ยืนยันขึ้นบน mass production จริง',p:'p1'},
+        {t:'เก็บเอกสารจดแจ้งและ INCI list ไว้อ้างอิง',n:'อย. อาจตรวจย้อนหลัง',p:'p4'},
+      ]},
+      {id:'packaging',icon:'📦',color:'#F4C0D1',label:'Packaging Tracker (อัปเดต 30 ก.ย.)',items:[
+        {t:'Unit Box',n:'ตรวจ AW ใหม่ก่อนส่งซัพขึ้น Mock-up/PPS — คาดได้ตัวอย่าง 19-20 ต.ค.',p:'p1'},
+        {t:'Keychain ⚠️',n:'RISK: เลื่อนจาก 24 พ.ย. → 1-3 ธ.ค. (ติดวันชาติจีน) — ยังไม่กระทบ stock date 15 ธ.ค. แต่ buffer เหลือน้อย ต้องติดตามใกล้ชิด',p:'p2'},
+        {t:'Tube',n:'สั่ง Mass Production แล้ว 29 ก.ย. — รอ CM จ่ายมัดจำ — หลอดเข้า 30 พ.ย.',p:'p2'},
+        {t:'Bottom & Shade Sticker',n:'Approved แล้ว ได้รับตัวอย่างแล้ว 30 ก.ย. ✅',p:'p1'},
+        {t:'Student Card',n:'CF แบบภายในวันนี้ — กำหนดตรวจสอบ 2 ต.ค. ตามแผนเดิม (ใช้โรงพิมพ์ภายใน)',p:'p1'},
+        {t:'Brochure',n:'อยู่ขั้น CF แบบ — สั่งขึ้นตัวอย่างกับโรงพิมพ์ไม่เกิน 2 วันหลัง CF',p:'p1'},
+        {t:'PR Bag',n:'ส่งตัวอย่างให้ซัพขึ้น Pattern แล้ว — คาดได้ Sample ไม่เกิน 9-10 ต.ค. (สำคัญสำหรับ PR seeding แทน event)',p:'p1'},
+        {t:'ตรวจ QC packaging จาก production รอบแรก',n:'',p:'p2'},
+      ]},
+      {id:'content',icon:'🎬',color:'#E1F5EE',label:'Content & Social',items:[
+        {t:'Phase 1 — Community First (6 คลิป)',n:'ไม่มีชื่อแบรนด์ — ต้องเร่งให้จบก่อน PR Marketing Date 8 ม.ค.',p:'p1'},
+        {t:'Phase 2 — Connect the Dots (6 คลิป)',n:'Mission reveal + BTS ทีม + Community→Product bridge',p:'p1'},
+        {t:'ตั้ง TikTok + IG + Lemon8 account',n:'',p:'p1'},
+        {t:'วาง content calendar ก.ย. 2026 – ม.ค. 2027',n:'',p:'p1'},
+        {t:'ถ่าย product demo ทุก SKU',n:'ใช้ footage จาก Photo Shoot Date 10 พ.ย.',p:'p2'},
+        {t:'Phase 3 — Chapter 1 launch film',n:'"Everyday Is Your Canvas" — ใช้เปิด PR Marketing Date 8 ม.ค.',p:'p4'},
+      ]},
+      {id:'kol',icon:'🤝',color:'#FEF3E2',label:'KOL & PR Seeding (ไม่มี event)',items:[
+        {t:'กำหนด KOL tier + budget',n:'',p:'p1'},
+        {t:'Shortlist school creator อายุ 15–22 ปี',n:'',p:'p1'},
+        {t:'จัดทำ KOL Brief document',n:'',p:'p1'},
+        {t:'เตรียม PR Bag + สินค้าสำหรับส่งให้ KOL/สื่อ',n:'แทน launch event เดิม — ใช้ PR Bag ที่กำลังทำ sample',p:'p3'},
+        {t:'ส่ง PR box ให้ KOL/สื่อ ก่อน PR Marketing Date',n:'ส่งให้ถึงมือก่อน 8 ม.ค. เพื่อให้โพสต์พร้อมกันวันนั้น',p:'p4'},
+        {t:'KOL review wave 1 — post วันที่ 8 ม.ค. (PR Date)',n:'',p:'p4'},
+        {t:'KOL review wave 2 — post วันที่ 15 ม.ค. (Launch Date)',n:'',p:'p4'},
+      ]},
+      {id:'online',icon:'🛒',color:'#EEF2FF',label:'Online Platform (ขายออนไลน์ก่อน ไม่มี pop-up)',items:[
+        {t:'เปิด Shopee Official Shop',n:'ใช้เวลา 7–14 วัน',p:'p1'},
+        {t:'เปิด Lazada + LINE + Facebook',n:'',p:'p1'},
+        {t:'เขียน product description ทุก SKU',n:'Deadline: E-Commerce Content Readiness 21 ธ.ค.',p:'p3'},
+        {t:'ถ่าย product photo (ใช้ media จาก Photo Shoot 10 พ.ย.)',n:'',p:'p2'},
+        {t:'ลง listing ครบทุกแพลตฟอร์ม',n:'Deadline: Marketplace Listing Completion 28 ธ.ค. (เตรียมไว้ ยังไม่เปิดขาย)',p:'p3'},
+        {t:'ทดสอบ checkout flow ก่อน go live',n:'',p:'p3'},
+        {t:'เปิดขายจริง (Basket Open)',n:'15 ม.ค. 2027 — พร้อมกับ Official Launch',p:'p4'},
+      ]},
+      {id:'brand',icon:'✦',color:'#FFF0F5',label:'Brand Operations',items:[
+        {t:'เปิด glimmersisters.com',n:'landing page + countdown ถึง 15 ม.ค. 2027',p:'p1'},
+        {t:'จดทะเบียนบริษัท / ชื่อการค้า',n:'',p:'p1'},
+        {t:'ทำ Brand Governance document',n:'',p:'p1'},
+        {t:'วาง media budget ต่อ phase',n:'',p:'p1'},
+        {t:'ติดตาม risk: Keychain delay ใกล้ชิดช่วงต้น ธ.ค.',n:'ยังไม่กระทบ stock date แต่ buffer เหลือน้อย',p:'p2'},
+        {t:'Weekly team sync',n:'ทุกสัปดาห์',p:'p1'},
+        {t:'วาง KPI ต่อ phase',n:'',p:'p1'},
+      ]},
+    ],
+    state:{}
+  };
+  DB.projects.push(gsProj);
+  DB.current = gsProj.id;
+  flushSave(0);
+}
+}
+
+init();
+</script>
+</body>
+</html>
